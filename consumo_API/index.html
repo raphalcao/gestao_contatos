@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API para um serviço de gestão de contatos</title>
+    <hr>
+    <h4>Lista Contatos</h4>
+    <ul id="contatos"></ul>
+
+    <hr>
+    <h4> Novo Contato </h4>
+    <input type="number" name="id" id="id" placeholder="ID"><br>
+    <input type="text" name="nome" id="nome" placeholder="nome"><br>
+    <input type="text" name="canal" id="canal" placeholder="canal"><br>
+    <input type="text" name="valor" id="valor" placeholder="valor"><br>
+    <input type="text" name="obs" id="obs" placeholder="obs"><br>
+    <button type="button" onclick="createContato()">Criar</button>
+
+    <hr>
+    <h4> Atualizar Contato </h4>
+    <input type="number" name="idUpdate" id="idUpdate" placeholder="ID" readonly><br>
+    <input type="text" name="nomeUpdate" id="nomeUpdate" placeholder="nome"><br>
+    <input type="text" name="canalUpdate" id="canalUpdate" placeholder="canal"><br>
+    <input type="text" name="valorUpdate" id="valorUpdate" placeholder="valor"><br>
+    <input type="text" name="obsUpdate" id="obsUpdate" placeholder="obs"><br>
+    <button type="button" onclick="updateContato()">Editar</button>
+
+</head>
+
+<body>
+
+</body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+
+    function createContato() {
+        var idInput = document.getElementById("id");
+        var nomeInput = document.getElementById("nome");
+        var canalInput = document.getElementById("canal");
+        var valorInput = document.getElementById("valor");
+        var obsInput = document.getElementById("obs");
+
+
+        var createContato = {
+            id: idInput.value,
+            nome: nomeInput.value,
+            canal: canalInput.value,
+            valor: valorInput.value,
+            obs: obsInput.value
+        }
+
+        axios.post("http://localhost:8080/contato", createContato).then(response => {
+            response.status(200)
+
+        }).catch(err => {
+            response.status(401)
+
+        });
+    }
+
+    function deleteContato(listItem) {
+        var id = listItem.getAttribute("data-id");
+        axios.delete("http://localhost:8080/contato/" + id).then(response => {
+            //response.status(200) 
+            alert("Cadastro apagado");
+
+        }).catch(err => {
+            console.log(response.status (404))
+            console.log(err);
+        })
+    }
+
+    function listarContato(listItem) {
+        
+        var id = listItem.getAttribute("data-id");
+        var nome = listItem.getAttribute("data-nome");
+        var canal = listItem.getAttribute("data-canal");
+        var valor = listItem.getAttribute("data-valor");
+        var obs = listItem.getAttribute("data-obs");
+
+
+        document.getElementById("idUpdate").value = id;
+        document.getElementById("nomeUpdate").value = nome;
+        document.getElementById("canalUpdate").value = canal;
+        document.getElementById("valorUpdate").value = valor;
+        document.getElementById("obsUpdate").value = obs;
+
+    }
+
+    function updateContato() {
+
+        var idUpdate = document.getElementById("idUpdate");
+        var nomeUpdate = document.getElementById("nomeUpdate");
+        var canalUpdate = document.getElementById("canalUpdate");
+        var valorUpdate = document.getElementById("valorUpdate");
+        var obsUpdate = document.getElementById("obsUpdate");
+
+        var updateContato = {
+            id: idUpdate.value,
+            nome: nomeUpdate.value,
+            canal: canalUpdate.value,
+            valor: valorUpdate.value,
+            obs: obsUpdate.value
+        }
+        var id = idUpdate.value;
+        axios.put("http://localhost:8080/contato/" + id, updateContato).then(response => {
+            if (response.status == 200) {
+                alert(" atualizado")
+            }
+
+        }).catch(err => {
+            console.log(err);
+
+        });
+
+    }
+
+
+
+    axios.get("http://localhost:8080/contatos").then(response => {
+        var lista_contatos = response.data;
+        var lista = document.getElementById("contatos");
+
+        lista_contatos.forEach(lista_contato => {
+            var item = document.createElement("li");
+
+            item.setAttribute("data-id", lista_contato.id);
+            item.setAttribute("data-nome", lista_contato.nome);
+            item.setAttribute("data-canal", lista_contato.canal);
+            item.setAttribute("data-valor", lista_contato.valor);
+            item.setAttribute("data-obs", lista_contato.obs);
+
+            item.innerHTML =
+                "ID: " + lista_contato.id +
+                "<br>Nome: " + lista_contato.nome +
+                "<br>Canal: " + lista_contato.canal +
+                "<br>Valor: " + lista_contato.valor +
+                "<br>OBS: " + lista_contato.obs + " <br> <br>";
+            lista.appendChild(item);
+
+            var deleteBtn = document.createElement("button");
+            deleteBtn.innerHTML = "Deletar";
+            deleteBtn.addEventListener("click", function(){
+                deleteContato(item);
+            })
+
+            var editBtn = document.createElement("button");
+            editBtn.innerHTML = "Edit";
+            editBtn.addEventListener("click", function(){
+                listarContato(item);
+            });
+            
+            
+            item.appendChild(deleteBtn);
+            item.appendChild(editBtn);
+
+
+            console.log(lista_contato);
+
+        });
+    }).catch(error => {
+        console.log(error);
+    });
+</script>
+
+</html>

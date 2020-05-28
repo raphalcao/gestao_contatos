@@ -42,7 +42,7 @@ var Contato = {
 
 
 app.get("/contatos", (req, res) => {
-    res.statusCode = 200;
+    res.statusCode = 201;
     res.json(Contato.gestao_contatos);
     
 });
@@ -60,7 +60,7 @@ app.get("/contato/:id", (req, res) => {
         var localiza_contato = Contato.gestao_contatos.find(lc => lc.id == id);
 
         if (localiza_contato != undefined) {
-            res.sendStatus = 200,
+            res.sendStatus = 201,
                 res.json(localiza_contato);
         } else {
 
@@ -84,7 +84,7 @@ app.post("/contato", (req, res) => {
         obs
     });
 
-    res.sendStatus(200);
+    res.sendStatus(201);
 
 });
 
@@ -122,7 +122,7 @@ app.put("/contato/:id", (req, res) => {
                 consulta_contato.obs = obs;
             }
 
-            res.sendStatus(200);
+            res.sendStatus(201);
 
         } else {
 
