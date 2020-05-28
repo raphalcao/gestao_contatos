@@ -16,7 +16,7 @@
     <input type="text" name="canal" id="canal" placeholder="canal"><br>
     <input type="text" name="valor" id="valor" placeholder="valor"><br>
     <input type="text" name="obs" id="obs" placeholder="obs"><br>
-    <button type="button" onclick="createContato()">Criar</button>
+    <button type="button" onclick="createContato()">Criar Contato</button>
 
     <hr>
     <h4> Atualizar Contato </h4>
@@ -25,7 +25,7 @@
     <input type="text" name="canalUpdate" id="canalUpdate" placeholder="canal"><br>
     <input type="text" name="valorUpdate" id="valorUpdate" placeholder="valor"><br>
     <input type="text" name="obsUpdate" id="obsUpdate" placeholder="obs"><br>
-    <button type="button" onclick="updateContato()">Editar</button>
+    <button type="button" onclick="updateContato()">Atualizar Contato</button>
 
 </head>
 
@@ -53,10 +53,13 @@
         }
 
         axios.post("http://localhost:8080/contato", createContato).then(response => {
-            response.status(200)
+            if(response.status == 201){
+                
+                alert("Contato cadastrado")
+            } 
 
         }).catch(err => {
-            response.status(401)
+            console.log(err)
 
         });
     }
@@ -64,8 +67,8 @@
     function deleteContato(listItem) {
         var id = listItem.getAttribute("data-id");
         axios.delete("http://localhost:8080/contato/" + id).then(response => {
-            //response.status(200) 
-            alert("Cadastro apagado");
+            
+            alert("Cadastro deletado");
 
         }).catch(err => {
             console.log(response.status (404))
@@ -107,8 +110,8 @@
         }
         var id = idUpdate.value;
         axios.put("http://localhost:8080/contato/" + id, updateContato).then(response => {
-            if (response.status == 200) {
-                alert(" atualizado")
+            if (response.status == 201) {
+                alert(" Contato atualizado")
             }
 
         }).catch(err => {
@@ -148,7 +151,7 @@
             })
 
             var editBtn = document.createElement("button");
-            editBtn.innerHTML = "Edit";
+            editBtn.innerHTML = "Editar";
             editBtn.addEventListener("click", function(){
                 listarContato(item);
             });
