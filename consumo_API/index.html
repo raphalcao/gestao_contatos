@@ -11,7 +11,7 @@
 
     <hr>
     <h4> Novo Contato </h4>
-    <input type="number" name="id" id="id" placeholder="ID"><br>
+    
     <input type="text" name="nome" id="nome" placeholder="nome"><br>
     <input type="text" name="canal" id="canal" placeholder="canal"><br>
     <input type="text" name="valor" id="valor" placeholder="valor"><br>
@@ -45,7 +45,7 @@
 
 
         var createContato = {
-            id: idInput.value,
+            
             nome: nomeInput.value,
             canal: canalInput.value,
             valor: valorInput.value,
@@ -110,7 +110,7 @@
         }
         var id = idUpdate.value;
         axios.put("http://localhost:8080/contato/" + id, updateContato).then(response => {
-            if (response.status == 201) {
+            if (response.status == 200) {
                 alert(" Contato atualizado")
             }
 
